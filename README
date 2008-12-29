@@ -1,0 +1,85 @@
+fbpanel
+------------------------------------------
+fbpanel is a desktop panel which provides graphical information and 
+feedback about desktop activity and allows interaction with the window 
+manager.
+
+Runtime requirements:
+  cygwin-1.5.25-15
+  libgdk_pixbuf2.0_0-2.14.6-1
+  libglib2.0_0-2.18.3-1
+  libgtk2.0_0-2.14.6-1
+  libX11_6-1.1.5-1
+
+Build requirements:
+(besides corresponding -devel packages)
+  binutils-20080624-2
+  cygport-0.4.3-1
+  gcc-core-3.4.4-3
+  make-3.81-1
+  pkg-config-0.23a-2
+
+Canonical website:
+  http://fbpanel.sourceforge.net/
+
+Canonical download:
+  http://downloads.sourceforge.net/fbpanel/
+
+-------------------------------------------
+
+Build instructions:
+  unpack fbpanel-4.12-X-src.tar.bz2
+    if you use setup to install this src package, it will be
+	 unpacked under /usr/src automatically
+  cd /usr/src
+  cygport ./fbpanel-4.12-X.cygport all
+
+This will create:
+  /usr/src/fbpanel-4.12-X-src.tar.bz2
+  /usr/src/fbpanel-4.12-X.tar.bz2
+
+-------------------------------------------
+
+Files included in the binary package:
+
+  /usr/bin/fbpanel.exe
+  /usr/share/doc/fbpanel-4.12/COPYING
+  /usr/share/doc/fbpanel-4.12/CREDITS
+  /usr/share/doc/fbpanel-4.12/ChangeLog
+  /usr/share/doc/fbpanel-4.12/INSTALL
+  /usr/share/doc/fbpanel-4.12/README
+  /usr/share/fbpanel/default
+  /usr/share/fbpanel/images/bottom-left.xpm
+  /usr/share/fbpanel/images/bottom-right.xpm
+  /usr/share/fbpanel/images/dclock_glyphs.png
+  /usr/share/fbpanel/images/default.xpm
+  /usr/share/fbpanel/images/gnome-applications.png
+  /usr/share/fbpanel/images/gnome-devel.svg
+  /usr/share/fbpanel/images/gnome-emacs.svg
+  /usr/share/fbpanel/images/gnome-fs-desktop.svg
+  /usr/share/fbpanel/images/gnome-fs-home.svg
+  /usr/share/fbpanel/images/gnome-globe.svg
+  /usr/share/fbpanel/images/gnome-graphics.png
+  /usr/share/fbpanel/images/gnome-joystick.svg
+  /usr/share/fbpanel/images/gnome-multimedia.svg
+  /usr/share/fbpanel/images/gnome-settings.svg
+  /usr/share/fbpanel/images/gnome-system.png
+  /usr/share/fbpanel/images/gnome-util.svg
+  /usr/share/fbpanel/images/gnome_terminal.svg
+  /usr/share/fbpanel/images/mozilla-firefox.svg
+  /usr/share/fbpanel/images/star.png
+  /usr/share/fbpanel/images/top-left.xpm
+  /usr/share/fbpanel/images/top-right.xpm
+  /usr/share/fbpanel/pager
+  /usr/share/man/man1/fbpanel.1.gz
+
+------------------
+
+Port Notes:
+
+----- version 4.12-1 -----
+Initial release for Cygwin.
+
+
+Cygwin port maintained by:
+http://sourceware.org/cygwinports/

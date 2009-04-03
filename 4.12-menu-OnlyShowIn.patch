@@ -1,0 +1,13 @@
+--- origsrc/fbpanel-4.12/plugins/menu.c	2007-07-30 18:38:54.000000000 -0500
++++ src/fbpanel-4.12/plugins/menu.c	2009-04-02 21:12:40.103201700 -0500
+@@ -127,8 +127,10 @@ do_app_dir(plugin *p, const gchar *path)
+             continue;
+         if (g_key_file_get_boolean(file, desktop_ent, "NoDisplay", NULL))
+             continue;
++#if 0
+         if (g_key_file_has_key(file, desktop_ent, "OnlyShowIn", NULL))
+             continue;
++#endif
+         if (!(cats = g_key_file_get_string_list(file, desktop_ent, "Categories", NULL, NULL)))
+             continue;
+         if (!(exec = g_key_file_get_string(file, desktop_ent, "Exec", NULL)))

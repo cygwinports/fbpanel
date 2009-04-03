@@ -5,7 +5,7 @@ feedback about desktop activity and allows interaction with the window
 manager.
 
 Runtime requirements:
-  cygwin-1.7.0-43
+  cygwin-1.7.0-44
   libgcc1-4.3.2-1
   libgdk_pixbuf2.0_0-2.16.0-1
   libglib2.0_0-2.20.0-1
@@ -15,7 +15,7 @@ Runtime requirements:
 Build requirements:
 (besides corresponding -devel packages)
   binutils-20080624-2
-  cygport-0.9.5-1
+  cygport-0.9.6-1
   gcc4-core-4.3.2-2
   make-3.81-2
   pkg-config-0.23a-2
@@ -79,10 +79,7 @@ Files included in the binary package:
 Port Notes:
 
 ----- version 4.12-10 -----
-Rebuilt for Cygwin 1.7.
-
------ version 4.12-1 -----
-Initial release for Cygwin.
+Initial release for Cygwin 1.7.
 
 
 Cygwin port maintained by:

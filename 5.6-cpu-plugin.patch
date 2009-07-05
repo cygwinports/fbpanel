@@ -1,0 +1,24 @@
+--- origsrc/fbpanel-5.6/plugins/chart/chart.c	2009-06-27 13:52:11.000000000 -0500
++++ src/fbpanel-5.6/plugins/chart/chart.c	2009-07-05 00:21:58.612291600 -0500
+@@ -24,7 +24,9 @@
+ #include <string.h>
+ #include <sys/time.h>
+ #include <time.h>
++#ifndef __CYGWIN__
+ #include <sys/sysinfo.h>
++#endif
+ #include <stdlib.h>
+ 
+ #include "plugin.h"
+--- origsrc/fbpanel-5.6/plugins/cpu/cpu.c	2009-06-27 13:52:11.000000000 -0500
++++ src/fbpanel-5.6/plugins/cpu/cpu.c	2009-07-05 01:14:15.397810600 -0500
+@@ -45,7 +45,7 @@ typedef struct {
+ 
+ static chart_class *k;
+ 
+-#if defined __linux__
++#if defined __linux__ || defined __CYGWIN__
+ static int
+ cpu_get_load(cpu_priv *c)
+ {
+

@@ -1,0 +1,11 @@
+--- origsrc/fbpanel-6.0/configure	2010-02-21 04:05:12.000000000 -0600
++++ src/fbpanel-6.0/configure	2010-03-25 19:42:23.049043400 -0500
+@@ -310,6 +310,8 @@ function main ()
+ add_var build "stab: configure for building on arch" ""
+ add_var host  "stab: configure for arch" ""
+ add_var target "stab: configure for arch" ""
++add_var srcdir "stab: unsupported" ""
++add_var exec_prefix "stab: use --eprefix" ""
+ 
+ # N.B. order is important
+ add_var prefix "install architecture-independent files" /usr

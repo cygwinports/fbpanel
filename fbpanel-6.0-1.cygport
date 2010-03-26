@@ -1,0 +1,22 @@
+DESCRIPTION="GTK+ lightweight desktop panel"
+HOMEPAGE="http://fbpanel.sourceforge.net/"
+SRC_URI="mirror://sourceforge/fbpanel/${P}.tbz2"
+PATCH_URI="
+	6.0-autotools-compat.patch
+	6.0-cygwin-proc.patch
+	6.0-static-plugins.patch
+"
+
+DIFF_EXCLUDES="Makefile"
+
+src_compile() {
+	lndirs
+	cd ${B}
+	cygconf --enable-static_build || error "configure failed"
+	cygmake -j1
+}
+
+src_install() {
+	cd ${B}
+	cyginstall PREFIX=${D}/usr LIBTARGET=
+}

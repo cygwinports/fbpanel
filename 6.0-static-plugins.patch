@@ -1,0 +1,16 @@
+--- origsrc/fbpanel-6.0/rules.mk	2010-03-22 02:57:30.000000000 -0500
++++ src/fbpanel-6.0/rules.mk	2010-03-25 19:12:10.339362300 -0500
+@@ -106,11 +106,13 @@ endif
+ ifneq (,$(LIBTARGET))
+ all : $(LIBTARGET)
+ $(LIBTARGET) : $(OBJS)
++ifneq (enabled,$(STATIC_BUILD))
+ 	$(call summary,LD  ,$@)
+ 	$Q$(CC) $(OBJS) -o $@ $(LDFLAGS) -shared
+ 
+ CLEANLIST += $(LIBTARGET)
+ endif
++endif
+ 
+ # ar archive
+ ifneq (,$(ARTARGET))

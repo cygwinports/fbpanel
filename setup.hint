@@ -1,6 +1,0 @@
-category: X11
-requires: libgcc1 libglib2.0_0 libgdk_pixbuf2.0_0 libgtk2.0_0 libX11_6
-sdesc: "Lightweight desktop panel"
-ldesc: "fbpanel is a desktop panel which provides graphical information 
-and feedback about desktop activity and allows interaction with the 
-window manager."

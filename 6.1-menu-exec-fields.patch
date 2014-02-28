@@ -1,0 +1,70 @@
+Implement Exec %i, %c, and %k; the first two of which are required for KDE.
+
+http://standards.freedesktop.org/desktop-entry-spec/latest/ar01s06.html
+
+--- origsrc/fbpanel-6.1/plugins/menu/system_menu.c	2010-04-15 03:43:56.000000000 -0500
++++ src/fbpanel-6.1/plugins/menu/system_menu.c	2014-02-28 01:54:21.410112100 -0600
+@@ -2,6 +2,7 @@
+ 
+ #include <glib.h>
+ #include <glib/gstdio.h>
++#include <stdlib.h>	/* for realloc */
+ #include <string.h>
+ #include <time.h>
+ 
+@@ -83,8 +84,53 @@ do_app_file(GHashTable *ht, const gchar
+ 
+     /* ignore program arguments */
+     while ((dot = strchr(action, '%'))) {
+-        if (dot[1] != '\0')
+-            dot[0] = dot[1] = ' ';
++      static char buf1[4096], buf2[4096];
++      switch (dot[1]) {
++        case '\0':
++          break;
++        case 'c':
++          {
++            strncpy (buf1, action, dot - action);
++            buf1[dot - action] = '\0';
++            if (dot[2]) {
++              strncpy (buf2, dot + 2, strlen (action) - strlen (buf1) - 2);
++              buf2[strlen (action) - strlen (buf1) - 2] = '\0';
++            } else
++              buf2[0] = '\0';
++            action = (char *) realloc (action, strlen (buf1) + strlen (buf2) + strlen (name) + 3);
++            sprintf (action, "%s\"%s\"%s", buf1, name, buf2);
++          }
++          break;
++        case 'k':
++          {
++            strncpy (buf1, action, dot - action);
++            buf1[dot - action] = '\0';
++            if (dot[2]) {
++              strncpy (buf2, dot + 2, strlen (action) - strlen (buf1) - 2);
++              buf2[strlen (action) - strlen (buf1) - 2] = '\0';
++            } else
++              buf2[0] = '\0';
++            action = (char *) realloc (action, strlen (buf1) + strlen (buf2) + strlen (file) + 3);
++            sprintf (action, "%s\"%s\"%s", buf1, file, buf2);
++          }
++          break;
++        case 'i':
++          if (icon) {
++            strncpy (buf1, action, dot - action);
++            buf1[dot - action] = '\0';
++            if (dot[2]) {
++              strncpy (buf2, dot + 2, strlen (action) - strlen (buf1) - 2);
++              buf2[strlen (action) - strlen (buf1) - 2] = '\0';
++            } else
++              buf2[0] = '\0';
++            action = (char *) realloc (action, strlen (buf1) + strlen (buf2) + strlen (icon) + 10);
++            sprintf (action, "%s--icon \"%s\"%s", buf1, icon, buf2);
++          break;
++          }
++          /* else fallthrough */
++        default:
++          dot[0] = dot[1] = ' ';
++      }
+     }
+     DBG("action: %s\n", action);
+     /* if icon is NOT an absolute path but has an extention,

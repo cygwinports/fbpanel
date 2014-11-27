@@ -1,6 +1,6 @@
 NAME="fbpanel"
 VERSION=6.1
-RELEASE=3
+RELEASE=4
 CATEGORY="X11"
 SUMMARY="Lightweight desktop panel"
 DESCRIPTION="fbpanel is a desktop panel which provides graphical information
@@ -13,9 +13,13 @@ PATCH_URI="
 	6.1-plugins-cygwin.patch
 	6.0-static-plugins.patch
 	6.1-menu-exec-fields.patch
+	6.1-profile-multiwindow.patch
+	6.1-xlogout-cygwin.patch
 "
 
 DIFF_EXCLUDES="Makefile"
+
+REQUIRES="procps"
 
 src_compile() {
 	lndirs

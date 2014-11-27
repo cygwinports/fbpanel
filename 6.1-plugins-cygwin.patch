@@ -1,5 +1,5 @@
 --- origsrc/fbpanel-6.1/data/config/default.in	2010-05-12 13:30:00.000000000 -0500
-+++ src/fbpanel-6.1/data/config/default.in	2014-03-06 14:15:10.349574800 -0600
++++ src/fbpanel-6.1/data/config/default.in	2014-11-26 16:42:26.171447500 -0600
 @@ -313,9 +313,9 @@ Plugin {
      }
  }
@@ -14,9 +14,13 @@
  #plugin {
  #    type = battery
 --- origsrc/fbpanel-6.1/plugins/battery/battery.c	2010-05-05 06:52:59.000000000 -0500
-+++ src/fbpanel-6.1/plugins/battery/battery.c	2010-07-21 10:26:53.772660100 -0500
-@@ -55,10 +55,11 @@ static gchar *batt_na[] = {
++++ src/fbpanel-6.1/plugins/battery/battery.c	2014-11-26 16:42:26.174947900 -0600
+@@ -53,12 +53,15 @@ static gchar *batt_na[] = {
+ 
+ #if defined __linux__
  #include "os_linux.c"
++#elif defined __CYGWIN__
++#include "os_cygwin.c"
  #else
  
 -static void
@@ -28,19 +32,50 @@
  }
  
  #endif
---- origsrc/fbpanel-5.6/plugins/cpu/cpu.c	2009-06-27 13:52:11.000000000 -0500
-+++ src/fbpanel-5.6/plugins/cpu/cpu.c	2009-07-05 01:14:15.397810600 -0500
-@@ -45,7 +45,7 @@ typedef struct {
+@@ -79,7 +82,7 @@ battery_update(battery_priv *c)
+     } else {
+         i = batt_na;
+         gtk_widget_set_tooltip_markup(((plugin_instance *)c)->pwid,
+-            "Runing on AC\nNo battery found");
++            "Running on AC\nNo battery found");
+     }
+     k->set_icons(&c->meter, i);
+     k->set_level(&c->meter, c->level);
+--- origsrc/fbpanel-6.1/plugins/battery/os_cygwin.c	1969-12-31 18:00:00.000000000 -0600
++++ src/fbpanel-6.1/plugins/battery/os_cygwin.c	2014-11-26 16:42:26.178448400 -0600
+@@ -0,0 +1,19 @@
++#define WIN32_LEAN_AND_MEAN
++#include <X11/Xwindows.h>
++
++static gboolean
++battery_update_os(battery_priv *c)
++{
++    gboolean ret;
++    SYSTEM_POWER_STATUS sps;
++
++    ENTER;
++    c->exist = FALSE;
++    ret = GetSystemPowerStatus(&sps);
++    if (!ret || (sps.BatteryFlag >= 128) || (sps.BatteryLifePercent == 255))
++      RET(FALSE);
++    c->exist = TRUE;
++    c->level = sps.BatteryLifePercent;
++    c->charging = (sps.BatteryFlag & 8);
++    RET(TRUE);
++}
+--- origsrc/fbpanel-6.1/plugins/cpu/cpu.c	2010-03-07 02:14:04.000000000 -0600
++++ src/fbpanel-6.1/plugins/cpu/cpu.c	2014-11-26 16:42:26.181948800 -0600
+@@ -46,7 +46,7 @@ static chart_class *k;
  
- static chart_class *k;
+ static void cpu_destructor(plugin_instance *p);
  
 -#if defined __linux__
 +#if defined __linux__ || defined __CYGWIN__
  static int
  cpu_get_load(cpu_priv *c)
  {
---- origsrc/fbpanel-6.0/plugins/mem/mem.c	2010-02-08 07:23:31.000000000 -0600
-+++ src/fbpanel-6.0/plugins/mem/mem.c	2010-03-25 19:17:29.981644800 -0500
+--- origsrc/fbpanel-6.1/plugins/mem/mem.c	2010-04-28 06:39:31.000000000 -0500
++++ src/fbpanel-6.1/plugins/mem/mem.c	2014-11-26 16:42:26.185449300 -0600
 @@ -48,7 +48,7 @@ typedef struct
  
  static stats_t stats;
@@ -51,7 +86,7 @@
  #define MT_ADD(x) MT_ ## x,
  enum {
 --- origsrc/fbpanel-6.1/plugins/volume/volume.c	2010-05-02 04:13:47.000000000 -0500
-+++ src/fbpanel-6.1/plugins/volume/volume.c	2010-07-21 10:21:48.250185200 -0500
++++ src/fbpanel-6.1/plugins/volume/volume.c	2014-11-26 16:42:26.188449700 -0600
 @@ -9,9 +9,7 @@
  #include <sys/types.h>
  #include <sys/stat.h>

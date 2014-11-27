@@ -1,0 +1,71 @@
+--- origsrc/fbpanel-6.1/data/config/Makefile.in	2009-06-01 09:55:28.000000000 -0500
++++ src/fbpanel-6.1/data/config/Makefile.in	2014-11-27 02:32:31.849897700 -0600
+@@ -1,6 +1,6 @@
+ include %%topdir%%/config.mk
+ 
+-TEXT = default pager
++TEXT = default pager multiwindow
+ 
+ install :
+ 	$(install) 755 $(DATADIR)/fbpanel 644 $(TEXT)
+--- origsrc/fbpanel-6.1/data/config/multiwindow.in	1969-12-31 18:00:00.000000000 -0600
++++ src/fbpanel-6.1/data/config/multiwindow.in	2014-11-27 02:32:13.127020200 -0600
+@@ -0,0 +1,58 @@
++# http://fbpanel.sourceforge.net/docs.html#config
++
++# Default settings are commented out
++Global {
++    Edge = top
++    Allign = left
++    WidthType = request
++#   HeightType = pixel
++#   Height = 26
++#   Margin = 0
++#   SetDockType = true
++#   SetPartialStrut = true
++#   Transparent = false
++    TintColor = #363B3B
++#   Alpha = 127
++#   Autohide = false
++    RoundCorners = false
++#   RoundCornersRadius = 7
++#   Layer = above
++    SetLayer = true
++#   MaxElemHeight = 200
++}
++
++plugin {
++    type = menu
++#   expand = false
++#   padding = 0
++    config {
++        icon = X
++        systemmenu {
++        }
++        separator {
++        }
++        item {
++            name = Cygwin Terminal
++            icon = utilities-terminal
++            action = mintty
++        }
++        item {
++            name = Exit Cygwin/X
++            icon = gtk-quit
++            action = /usr/libexec/fbpanel/xlogout
++        }
++    }
++}
++plugin {
++    type = tray
++    expand = true
++    padding = 2
++}
++plugin {
++    type = icons
++#   expand = false
++#   padding = 0
++    config {
++        DefaultIcon = X
++    }
++}

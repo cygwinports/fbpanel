@@ -1,0 +1,28 @@
+--- origsrc/fbpanel-6.1/exec/xlogout	2010-03-15 10:53:21.000000000 -0500
++++ src/fbpanel-6.1/exec/xlogout	2014-11-26 18:20:53.713610100 -0600
+@@ -15,7 +15,7 @@ XPID=`echo $XPID`
+ echo "XPID=$XPID"
+ 
+ # get pid of xdm (or gdm, kdm, etc). usually it's parent of X
+-XDMPID=`ps -o ppid --pid=$XPID | awk '{if (FNR != 1) print $1}'`
++XDMPID=`procps -o ppid --pid=$XPID | awk '{if (FNR != 1) print $1}'`
+ echo "XDMPID=$XDMPID"
+ 
+ # recursivly find child of xdm that was started in home dir - 
+@@ -25,7 +25,7 @@ function pid_scan()
+ 
+     rm -f $PF
+     while [ $# != 0 ]; do
+-        ps --no-headers -o pid --ppid=$1 >> $PF
++        procps --no-headers -o pid --ppid=$1 >> $PF
+         shift
+     done
+     for pid in `< $PF`; do
+@@ -44,6 +44,6 @@ rm -f $PF
+ 
+ [ -z "$SPID" ] && exit 1
+ echo "Session start up script"
+-ps -o uid,pid,ppid,sess,cmd --pid $SPID
++procps -o uid,pid,ppid,sess,cmd --pid $SPID
+ kill -SIGTERM -$SPID
+ 

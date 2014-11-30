@@ -1,0 +1,37 @@
+If none of the programs in the 'for' loops are installed, then no
+substitution is passed to sed and the resulting profile is empty.
+
+https://cygwin.com/ml/cygwin-xfree/2014-11/msg00043.html
+
+--- origsrc/fbpanel-6.1/exec/make_profile.in	2010-03-24 04:58:10.000000000 -0500
++++ src/fbpanel-6.1/exec/make_profile.in	2014-11-30 01:27:17.390992800 -0600
+@@ -47,24 +47,26 @@ function take_system_profile ()
+     [ -r "$spdir/$1" ] || return 1
+ 
+     local browser terminal filer
+-    for browser in x-www-browser firefox opera; do
++    for browser in x-www-browser firefox opera midori epiphany; do
+         if which $browser 2> /dev/null > /dev/null; then
+             opt="$opt -e s/x-www-browser/$browser/"
+             break
+         fi
+     done
+-    for terminal in x-terminal urxvt gnome-terminal; do
++    for terminal in x-terminal urxvt lxterminal xfce4-terminal roxterm mate-terminal gnome-terminal xterm; do
+         if which $terminal 2> /dev/null > /dev/null; then
+             opt="$opt -e s/x-terminal/$terminal/"
+             break
+         fi
+     done
+-    for filer in x-file-manager thunar pcmanfm rox; do
++    for filer in x-file-manager thunar pcmanfm caja nautilus rox; do
+         if which $filer 2> /dev/null > /dev/null; then
+             opt="$opt -e s/x-file-manager/$filer/"
+             break
+         fi
+     done
++    # in case none of the above are present (although xterm should be)
++    [ -n "$opt" ] || opt="-e s/x/x/"
+     sed $opt < "$spdir/$1" > "$npdir/$2"
+     echo "Using $spdir/$1 as template"
+ }

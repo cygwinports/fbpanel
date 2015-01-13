@@ -51,7 +51,7 @@
 +        }
 +        item {
 +            name = Exit Cygwin/X
-+            icon = gtk-quit
++            icon = application-exit
 +            action = /usr/libexec/fbpanel/xlogout
 +        }
 +    }

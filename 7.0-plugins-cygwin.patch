@@ -1,0 +1,130 @@
+--- origsrc/fbpanel-7.0/.config/rules.mk	2016-10-09 23:39:46.578670600 -0500
++++ src/fbpanel-7.0/.config/rules.mk	2016-10-09 23:23:58.209064200 -0500
+@@ -195,7 +195,7 @@ $(foreach s,$($(1)_src),\
+ 
+ $(1) : $($(1)_obj)
+ 	$(call summary,BIN   ,$$@)
+-	$Q$(CC) $$^ $(LDFLAGS) $($(1)_libs) -o $$@ $(out)
++	$Q$(CC) $$^ $(LDFLAGS) -Wl,--out-implib,lib$(1).dll.a $($(1)_libs) -o $$@ $(out)
+ 
+ ifeq ($($(1)_install),)
+ install : $(1)_install
+@@ -215,7 +215,7 @@ $(foreach s,$($(1)_src),\
+ 
+ lib$(1).so :  $($(1)_obj)
+ 	$(call summary,LIB   ,$$@)
+-	$Q$(CC) $$^ $(LDFLAGS) $($(1)_libs) -shared -o $$@ $(out)
++	$Q$(CC) $$^ $(LDFLAGS) $($(1)_libs) -Wl,../../panel/libfbpanel.dll.a -shared -o $$@ $(out)
+ 
+ ifeq ($($(1)_install),)
+ install : $(1)_install
+--- origsrc/fbpanel-7.0/data/config/default.in	2016-10-09 23:39:25.681536900 -0500
++++ src/fbpanel-7.0/data/config/default.in	2016-10-09 23:23:58.531994200 -0500
+@@ -313,9 +313,9 @@ Plugin {
+     }
+ }
+ 
+-plugin {
+-    type = volume
+-}
++#plugin {
++#    type = volume
++#}
+ 
+ #plugin {
+ #    type = battery
+--- origsrc/fbpanel-7.0/plugins/Makefile	2015-12-05 00:34:19.000000000 -0600
++++ src/fbpanel-7.0/plugins/Makefile	2016-10-09 23:31:26.469188200 -0500
+@@ -16,7 +16,6 @@ SUBDIRS := battery \
+     mem2 \
+     menu \
+     meter \
+-    net \
+     pager \
+     separator \
+     space \
+--- origsrc/fbpanel-7.0/plugins/battery/battery.c	2016-10-09 23:39:25.686037000 -0500
++++ src/fbpanel-7.0/plugins/battery/battery.c	2016-10-09 23:23:58.534994700 -0500
+@@ -53,12 +53,15 @@ static gchar *batt_na[] = {
+ 
+ #if defined __linux__
+ #include "os_linux.c"
++#elif defined __CYGWIN__
++#include "os_cygwin.c"
+ #else
+ 
+-static void
++static gboolean
+ battery_update_os(battery_priv *c)
+ {
+     c->exist = FALSE;
++    RET(FALSE);
+ }
+ 
+ #endif
+@@ -79,7 +82,7 @@ battery_update(battery_priv *c)
+     } else {
+         i = batt_na;
+         gtk_widget_set_tooltip_markup(((plugin_instance *)c)->pwid,
+-            "Runing on AC\nNo battery found");
++            "Running on AC\nNo battery found");
+     }
+     k->set_icons(&c->meter, i);
+     k->set_level(&c->meter, c->level);
+--- origsrc/fbpanel-7.0/plugins/battery/os_cygwin.c	1969-12-31 18:00:00.000000000 -0600
++++ src/fbpanel-7.0/plugins/battery/os_cygwin.c	2016-10-09 23:23:58.539001000 -0500
+@@ -0,0 +1,19 @@
++#define WIN32_LEAN_AND_MEAN
++#include <X11/Xwindows.h>
++
++static gboolean
++battery_update_os(battery_priv *c)
++{
++    gboolean ret;
++    SYSTEM_POWER_STATUS sps;
++
++    ENTER;
++    c->exist = FALSE;
++    ret = GetSystemPowerStatus(&sps);
++    if (!ret || (sps.BatteryFlag >= 128) || (sps.BatteryLifePercent == 255))
++      RET(FALSE);
++    c->exist = TRUE;
++    c->level = sps.BatteryLifePercent;
++    c->charging = (sps.BatteryFlag & 8);
++    RET(TRUE);
++}
+--- origsrc/fbpanel-7.0/plugins/cpu/cpu.c	2016-10-09 23:39:25.691038100 -0500
++++ src/fbpanel-7.0/plugins/cpu/cpu.c	2016-10-09 23:23:58.540994700 -0500
+@@ -36,7 +36,7 @@ static chart_class *k;
+ static void cpu_destructor(plugin_instance *p);
+ 
+ 
+-#if defined __linux__
++#if defined __linux__ || defined __CYGWIN__
+ static int
+ cpu_get_load_real(struct cpu_stat *cpu)
+ {
+--- origsrc/fbpanel-7.0/plugins/mem/mem.c	2016-10-09 23:39:25.696038900 -0500
++++ src/fbpanel-7.0/plugins/mem/mem.c	2016-10-09 23:23:58.544995300 -0500
+@@ -48,7 +48,7 @@ typedef struct
+ 
+ static stats_t stats;
+ 
+-#if defined __linux__
++#if defined __linux__ || defined __CYGWIN__
+ #undef MT_ADD
+ #define MT_ADD(x) MT_ ## x,
+ enum {
+--- origsrc/fbpanel-7.0/plugins/volume/volume.c	2016-10-09 23:39:25.699539100 -0500
++++ src/fbpanel-7.0/plugins/volume/volume.c	2016-10-09 23:23:58.547995800 -0500
+@@ -9,9 +9,7 @@
+ #include <sys/types.h>
+ #include <sys/stat.h>
+ #include <fcntl.h>
+-#if defined __linux__
+-#include <linux/soundcard.h>
+-#endif
++#include <sys/soundcard.h>
+ 
+ //#define DEBUGPRN
+ #include "dbg.h"

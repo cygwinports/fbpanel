@@ -1,15 +1,16 @@
---- origsrc/fbpanel-6.1/data/config/Makefile.in	2009-06-01 09:55:28.000000000 -0500
-+++ src/fbpanel-6.1/data/config/Makefile.in	2014-11-27 02:32:31.849897700 -0600
-@@ -1,6 +1,6 @@
- include %%topdir%%/config.mk
+--- origsrc/fbpanel-7.0/data/config/Makefile	2015-12-05 00:34:19.000000000 -0600
++++ src/fbpanel-7.0/data/config/Makefile	2016-10-09 23:15:33.772610900 -0500
+@@ -2,7 +2,7 @@
+ 
+ TOPDIR := ../..
  
 -TEXT = default pager
 +TEXT = default pager multiwindow
+ all : $(TEXT)
+ CLEANLIST += $(TEXT)
  
- install :
- 	$(install) 755 $(DATADIR)/fbpanel 644 $(TEXT)
---- origsrc/fbpanel-6.1/data/config/multiwindow.in	1969-12-31 18:00:00.000000000 -0600
-+++ src/fbpanel-6.1/data/config/multiwindow.in	2014-11-27 02:32:13.127020200 -0600
+--- origsrc/fbpanel-7.0/data/config/multiwindow.in	1969-12-31 18:00:00.000000000 -0600
++++ src/fbpanel-7.0/data/config/multiwindow.in	2016-10-09 23:15:45.707064000 -0500
 @@ -0,0 +1,58 @@
 +# http://fbpanel.sourceforge.net/docs.html#config
 +

@@ -35,3 +35,14 @@ https://cygwin.com/ml/cygwin-xfree/2014-11/msg00043.html
      sed $opt < "$spdir/$1" > "$npdir/$2"
      echo "Using $spdir/$1 as template"
  }
+--- origsrc/fbpanel-7.0/panel/panel.c	2015-12-05 00:34:19.000000000 -0600
++++ src/fbpanel-7.0/panel/panel.c	2016-10-09 23:44:24.966235000 -0500
+@@ -923,7 +923,7 @@ ensure_profile()
+     {
+         return;
+     }
+-    cmd = g_strdup_printf("%s %s", LIBEXECDIR "/fbpanel/make_profile",
++    cmd = g_strdup_printf("%s %s", LIBEXECDIR "/make_profile",
+         profile);
+     g_spawn_command_line_sync(cmd, NULL, NULL, NULL, NULL);
+     g_free(cmd);
